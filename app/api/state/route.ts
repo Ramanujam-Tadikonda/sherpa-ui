@@ -4,7 +4,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import { STATE_VERSION } from "@/lib/version";
 
-const FILE = path.join(process.cwd(), ".data", "db.json");
+/* Vercel functions can only write to /tmp, which is per-instance and wiped on cold starts. */
+const FILE = process.env.VERCEL ? "/tmp/sherpa-db.json" : path.join(process.cwd(), ".data", "db.json");
 type Db = { rev: number; state: unknown };
 
 const versionOf = (x: unknown) => Number((x as { v?: number } | null)?.v ?? 0);
